@@ -1,0 +1,45 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  buf:
+    name: buf
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - uses: bufbuild/buf-action@v1
+        with:
+          setup_only: true
+
+      - name: Format
+        run: buf format --diff --exit-code
+
+      - name: Lint
+        run: buf lint
+
+      - name: Breaking changes
+        if: github.event_name == 'pull_request'
+        run: buf breaking --against ".git#branch=origin/${{ github.base_ref }}"
+
+      - uses: actions/setup-go@v6
+        with:
+          go-version-file: go.mod
+
+      - name: Generated code is up to date
+        run: |
+          buf generate
+          go mod tidy
+          git diff --exit-code || (echo "::error::Run 'task gen' and commit the result" && exit 1)
+
+      - name: Build generated code
+        run: go build ./...
