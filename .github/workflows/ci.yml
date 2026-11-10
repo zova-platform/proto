@@ -4,6 +4,7 @@ on:
   push:
     branches: [main]
   pull_request:
+    types: [opened, synchronize, reopened, labeled, unlabeled]
 
 permissions:
   contents: read
@@ -28,7 +29,7 @@ jobs:
         run: buf lint
 
       - name: Breaking changes
-        if: github.event_name == 'pull_request'
+        if: github.event_name == 'pull_request' && !contains(github.event.pull_request.labels.*.name, 'buf skip breaking')
         run: buf breaking --against ".git#branch=origin/${{ github.base_ref }}"
 
       - uses: actions/setup-go@v6
