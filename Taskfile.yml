@@ -1,0 +1,27 @@
+version: "3"
+
+tasks:
+  gen:
+    desc: Generate Go code into gen/go
+    cmds:
+      - buf generate
+      - go mod tidy
+
+  lint:
+    desc: Lint and format-check protos
+    cmds:
+      - buf format --diff --exit-code
+      - buf lint
+
+  breaking:
+    desc: Check for breaking changes against main
+    cmds:
+      - buf breaking --against ".git#branch=main"
+
+  check:
+    desc: Everything CI runs
+    cmds:
+      - task: lint
+      - task: gen
+      - go build ./...
+      - git diff --exit-code
