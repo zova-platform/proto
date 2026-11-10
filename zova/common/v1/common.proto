@@ -1,0 +1,33 @@
+syntax = "proto3";
+
+package zova.common.v1;
+
+// A point on Earth in WGS84 degrees.
+message LatLng {
+  // Latitude in degrees, -90 to 90.
+  double lat = 1;
+  // Longitude in degrees, -180 to 180.
+  double lng = 2;
+}
+
+// An amount of money in the smallest unit of the currency (satang for THB).
+message Money {
+  // ISO 4217 code, for example "THB".
+  string currency_code = 1;
+  // Amount in minor units. 12050 THB satang = 120.50 baht.
+  int64 amount_minor = 2;
+}
+
+// Request side of cursor-based pagination.
+message PageRequest {
+  // Maximum items to return. The server may return fewer.
+  int32 page_size = 1;
+  // Token from a previous PageResponse. Empty for the first page.
+  string page_token = 2;
+}
+
+// Response side of cursor-based pagination.
+message PageResponse {
+  // Token for the next page. Empty when there are no more items.
+  string next_page_token = 1;
+}

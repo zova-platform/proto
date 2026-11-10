@@ -4,12 +4,13 @@
 // 	protoc        (unknown)
 // source: zova/common/v1/common.proto
 
-package v1
+package commonv1
 
 import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
+	sync "sync"
 	unsafe "unsafe"
 )
 
@@ -20,13 +21,255 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
+// A point on Earth in WGS84 degrees.
+type LatLng struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// Latitude in degrees, -90 to 90.
+	Lat float64 `protobuf:"fixed64,1,opt,name=lat,proto3" json:"lat,omitempty"`
+	// Longitude in degrees, -180 to 180.
+	Lng           float64 `protobuf:"fixed64,2,opt,name=lng,proto3" json:"lng,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *LatLng) Reset() {
+	*x = LatLng{}
+	mi := &file_zova_common_v1_common_proto_msgTypes[0]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *LatLng) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*LatLng) ProtoMessage() {}
+
+func (x *LatLng) ProtoReflect() protoreflect.Message {
+	mi := &file_zova_common_v1_common_proto_msgTypes[0]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use LatLng.ProtoReflect.Descriptor instead.
+func (*LatLng) Descriptor() ([]byte, []int) {
+	return file_zova_common_v1_common_proto_rawDescGZIP(), []int{0}
+}
+
+func (x *LatLng) GetLat() float64 {
+	if x != nil {
+		return x.Lat
+	}
+	return 0
+}
+
+func (x *LatLng) GetLng() float64 {
+	if x != nil {
+		return x.Lng
+	}
+	return 0
+}
+
+// An amount of money in the smallest unit of the currency (satang for THB).
+type Money struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// ISO 4217 code, for example "THB".
+	CurrencyCode string `protobuf:"bytes,1,opt,name=currency_code,json=currencyCode,proto3" json:"currency_code,omitempty"`
+	// Amount in minor units. 12050 THB satang = 120.50 baht.
+	AmountMinor   int64 `protobuf:"varint,2,opt,name=amount_minor,json=amountMinor,proto3" json:"amount_minor,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *Money) Reset() {
+	*x = Money{}
+	mi := &file_zova_common_v1_common_proto_msgTypes[1]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *Money) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*Money) ProtoMessage() {}
+
+func (x *Money) ProtoReflect() protoreflect.Message {
+	mi := &file_zova_common_v1_common_proto_msgTypes[1]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use Money.ProtoReflect.Descriptor instead.
+func (*Money) Descriptor() ([]byte, []int) {
+	return file_zova_common_v1_common_proto_rawDescGZIP(), []int{1}
+}
+
+func (x *Money) GetCurrencyCode() string {
+	if x != nil {
+		return x.CurrencyCode
+	}
+	return ""
+}
+
+func (x *Money) GetAmountMinor() int64 {
+	if x != nil {
+		return x.AmountMinor
+	}
+	return 0
+}
+
+// Request side of cursor-based pagination.
+type PageRequest struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// Maximum items to return. The server may return fewer.
+	PageSize int32 `protobuf:"varint,1,opt,name=page_size,json=pageSize,proto3" json:"page_size,omitempty"`
+	// Token from a previous PageResponse. Empty for the first page.
+	PageToken     string `protobuf:"bytes,2,opt,name=page_token,json=pageToken,proto3" json:"page_token,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *PageRequest) Reset() {
+	*x = PageRequest{}
+	mi := &file_zova_common_v1_common_proto_msgTypes[2]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *PageRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*PageRequest) ProtoMessage() {}
+
+func (x *PageRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_zova_common_v1_common_proto_msgTypes[2]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use PageRequest.ProtoReflect.Descriptor instead.
+func (*PageRequest) Descriptor() ([]byte, []int) {
+	return file_zova_common_v1_common_proto_rawDescGZIP(), []int{2}
+}
+
+func (x *PageRequest) GetPageSize() int32 {
+	if x != nil {
+		return x.PageSize
+	}
+	return 0
+}
+
+func (x *PageRequest) GetPageToken() string {
+	if x != nil {
+		return x.PageToken
+	}
+	return ""
+}
+
+// Response side of cursor-based pagination.
+type PageResponse struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// Token for the next page. Empty when there are no more items.
+	NextPageToken string `protobuf:"bytes,1,opt,name=next_page_token,json=nextPageToken,proto3" json:"next_page_token,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *PageResponse) Reset() {
+	*x = PageResponse{}
+	mi := &file_zova_common_v1_common_proto_msgTypes[3]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *PageResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*PageResponse) ProtoMessage() {}
+
+func (x *PageResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_zova_common_v1_common_proto_msgTypes[3]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use PageResponse.ProtoReflect.Descriptor instead.
+func (*PageResponse) Descriptor() ([]byte, []int) {
+	return file_zova_common_v1_common_proto_rawDescGZIP(), []int{3}
+}
+
+func (x *PageResponse) GetNextPageToken() string {
+	if x != nil {
+		return x.NextPageToken
+	}
+	return ""
+}
+
 var File_zova_common_v1_common_proto protoreflect.FileDescriptor
 
 const file_zova_common_v1_common_proto_rawDesc = "" +
 	"\n" +
-	"\x1bzova/common/v1/common.protoBEB\vCommonProtoP\x01Z4github.com/zova-platform/proto/gen/go/zova/common/v1"
+	"\x1bzova/common/v1/common.proto\x12\x0ezova.common.v1\",\n" +
+	"\x06LatLng\x12\x10\n" +
+	"\x03lat\x18\x01 \x01(\x01R\x03lat\x12\x10\n" +
+	"\x03lng\x18\x02 \x01(\x01R\x03lng\"O\n" +
+	"\x05Money\x12#\n" +
+	"\rcurrency_code\x18\x01 \x01(\tR\fcurrencyCode\x12!\n" +
+	"\famount_minor\x18\x02 \x01(\x03R\vamountMinor\"I\n" +
+	"\vPageRequest\x12\x1b\n" +
+	"\tpage_size\x18\x01 \x01(\x05R\bpageSize\x12\x1d\n" +
+	"\n" +
+	"page_token\x18\x02 \x01(\tR\tpageToken\"6\n" +
+	"\fPageResponse\x12&\n" +
+	"\x0fnext_page_token\x18\x01 \x01(\tR\rnextPageTokenB\xba\x01\n" +
+	"\x12com.zova.common.v1B\vCommonProtoP\x01Z=github.com/zova-platform/proto/gen/go/zova/common/v1;commonv1\xa2\x02\x03ZCX\xaa\x02\x0eZova.Common.V1\xca\x02\x0eZova\\Common\\V1\xe2\x02\x1aZova\\Common\\V1\\GPBMetadata\xea\x02\x10Zova::Common::V1b\x06proto3"
 
-var file_zova_common_v1_common_proto_goTypes = []any{}
+var (
+	file_zova_common_v1_common_proto_rawDescOnce sync.Once
+	file_zova_common_v1_common_proto_rawDescData []byte
+)
+
+func file_zova_common_v1_common_proto_rawDescGZIP() []byte {
+	file_zova_common_v1_common_proto_rawDescOnce.Do(func() {
+		file_zova_common_v1_common_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_zova_common_v1_common_proto_rawDesc), len(file_zova_common_v1_common_proto_rawDesc)))
+	})
+	return file_zova_common_v1_common_proto_rawDescData
+}
+
+var file_zova_common_v1_common_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
+var file_zova_common_v1_common_proto_goTypes = []any{
+	(*LatLng)(nil),       // 0: zova.common.v1.LatLng
+	(*Money)(nil),        // 1: zova.common.v1.Money
+	(*PageRequest)(nil),  // 2: zova.common.v1.PageRequest
+	(*PageResponse)(nil), // 3: zova.common.v1.PageResponse
+}
 var file_zova_common_v1_common_proto_depIdxs = []int32{
 	0, // [0:0] is the sub-list for method output_type
 	0, // [0:0] is the sub-list for method input_type
@@ -46,12 +289,13 @@ func file_zova_common_v1_common_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_zova_common_v1_common_proto_rawDesc), len(file_zova_common_v1_common_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   0,
+			NumMessages:   4,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
 		GoTypes:           file_zova_common_v1_common_proto_goTypes,
 		DependencyIndexes: file_zova_common_v1_common_proto_depIdxs,
+		MessageInfos:      file_zova_common_v1_common_proto_msgTypes,
 	}.Build()
 	File_zova_common_v1_common_proto = out.File
 	file_zova_common_v1_common_proto_goTypes = nil
