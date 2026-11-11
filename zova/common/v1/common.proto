@@ -2,6 +2,8 @@ syntax = "proto3";
 
 package zova.common.v1;
 
+import "google/protobuf/timestamp.proto";
+
 // A point on Earth in WGS84 degrees.
 message LatLng {
   // Latitude in degrees, -90 to 90.
@@ -30,4 +32,16 @@ message PageRequest {
 message PageResponse {
   // Token for the next page. Empty when there are no more items.
   string next_page_token = 1;
+}
+
+enum VehicleType {
+  VEHICLE_TYPE_UNSPECIFIED = 0;
+  VEHICLE_TYPE_CAR = 1;
+  VEHICLE_TYPE_MOTO = 2;
+}
+
+message EventMeta {
+  string event_id = 1;
+  google.protobuf.Timestamp occurred_at = 2;
+  int32 version = 3;
 }

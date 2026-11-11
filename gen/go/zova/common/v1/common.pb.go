@@ -9,6 +9,7 @@ package commonv1
 import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
+	timestamppb "google.golang.org/protobuf/types/known/timestamppb"
 	reflect "reflect"
 	sync "sync"
 	unsafe "unsafe"
@@ -20,6 +21,55 @@ const (
 	// Verify that runtime/protoimpl is sufficiently up-to-date.
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
+
+type VehicleType int32
+
+const (
+	VehicleType_VEHICLE_TYPE_UNSPECIFIED VehicleType = 0
+	VehicleType_VEHICLE_TYPE_CAR         VehicleType = 1
+	VehicleType_VEHICLE_TYPE_MOTO        VehicleType = 2
+)
+
+// Enum value maps for VehicleType.
+var (
+	VehicleType_name = map[int32]string{
+		0: "VEHICLE_TYPE_UNSPECIFIED",
+		1: "VEHICLE_TYPE_CAR",
+		2: "VEHICLE_TYPE_MOTO",
+	}
+	VehicleType_value = map[string]int32{
+		"VEHICLE_TYPE_UNSPECIFIED": 0,
+		"VEHICLE_TYPE_CAR":         1,
+		"VEHICLE_TYPE_MOTO":        2,
+	}
+)
+
+func (x VehicleType) Enum() *VehicleType {
+	p := new(VehicleType)
+	*p = x
+	return p
+}
+
+func (x VehicleType) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (VehicleType) Descriptor() protoreflect.EnumDescriptor {
+	return file_zova_common_v1_common_proto_enumTypes[0].Descriptor()
+}
+
+func (VehicleType) Type() protoreflect.EnumType {
+	return &file_zova_common_v1_common_proto_enumTypes[0]
+}
+
+func (x VehicleType) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use VehicleType.Descriptor instead.
+func (VehicleType) EnumDescriptor() ([]byte, []int) {
+	return file_zova_common_v1_common_proto_rawDescGZIP(), []int{0}
+}
 
 // A point on Earth in WGS84 degrees.
 type LatLng struct {
@@ -232,11 +282,71 @@ func (x *PageResponse) GetNextPageToken() string {
 	return ""
 }
 
+type EventMeta struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	EventId       string                 `protobuf:"bytes,1,opt,name=event_id,json=eventId,proto3" json:"event_id,omitempty"`
+	OccurredAt    *timestamppb.Timestamp `protobuf:"bytes,2,opt,name=occurred_at,json=occurredAt,proto3" json:"occurred_at,omitempty"`
+	Version       int32                  `protobuf:"varint,3,opt,name=version,proto3" json:"version,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *EventMeta) Reset() {
+	*x = EventMeta{}
+	mi := &file_zova_common_v1_common_proto_msgTypes[4]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *EventMeta) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*EventMeta) ProtoMessage() {}
+
+func (x *EventMeta) ProtoReflect() protoreflect.Message {
+	mi := &file_zova_common_v1_common_proto_msgTypes[4]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use EventMeta.ProtoReflect.Descriptor instead.
+func (*EventMeta) Descriptor() ([]byte, []int) {
+	return file_zova_common_v1_common_proto_rawDescGZIP(), []int{4}
+}
+
+func (x *EventMeta) GetEventId() string {
+	if x != nil {
+		return x.EventId
+	}
+	return ""
+}
+
+func (x *EventMeta) GetOccurredAt() *timestamppb.Timestamp {
+	if x != nil {
+		return x.OccurredAt
+	}
+	return nil
+}
+
+func (x *EventMeta) GetVersion() int32 {
+	if x != nil {
+		return x.Version
+	}
+	return 0
+}
+
 var File_zova_common_v1_common_proto protoreflect.FileDescriptor
 
 const file_zova_common_v1_common_proto_rawDesc = "" +
 	"\n" +
-	"\x1bzova/common/v1/common.proto\x12\x0ezova.common.v1\",\n" +
+	"\x1bzova/common/v1/common.proto\x12\x0ezova.common.v1\x1a\x1fgoogle/protobuf/timestamp.proto\",\n" +
 	"\x06LatLng\x12\x10\n" +
 	"\x03lat\x18\x01 \x01(\x01R\x03lat\x12\x10\n" +
 	"\x03lng\x18\x02 \x01(\x01R\x03lng\"O\n" +
@@ -248,7 +358,16 @@ const file_zova_common_v1_common_proto_rawDesc = "" +
 	"\n" +
 	"page_token\x18\x02 \x01(\tR\tpageToken\"6\n" +
 	"\fPageResponse\x12&\n" +
-	"\x0fnext_page_token\x18\x01 \x01(\tR\rnextPageTokenB\xba\x01\n" +
+	"\x0fnext_page_token\x18\x01 \x01(\tR\rnextPageToken\"}\n" +
+	"\tEventMeta\x12\x19\n" +
+	"\bevent_id\x18\x01 \x01(\tR\aeventId\x12;\n" +
+	"\voccurred_at\x18\x02 \x01(\v2\x1a.google.protobuf.TimestampR\n" +
+	"occurredAt\x12\x18\n" +
+	"\aversion\x18\x03 \x01(\x05R\aversion*X\n" +
+	"\vVehicleType\x12\x1c\n" +
+	"\x18VEHICLE_TYPE_UNSPECIFIED\x10\x00\x12\x14\n" +
+	"\x10VEHICLE_TYPE_CAR\x10\x01\x12\x15\n" +
+	"\x11VEHICLE_TYPE_MOTO\x10\x02B\xba\x01\n" +
 	"\x12com.zova.common.v1B\vCommonProtoP\x01Z=github.com/zova-platform/proto/gen/go/zova/common/v1;commonv1\xa2\x02\x03ZCX\xaa\x02\x0eZova.Common.V1\xca\x02\x0eZova\\Common\\V1\xe2\x02\x1aZova\\Common\\V1\\GPBMetadata\xea\x02\x10Zova::Common::V1b\x06proto3"
 
 var (
@@ -263,19 +382,24 @@ func file_zova_common_v1_common_proto_rawDescGZIP() []byte {
 	return file_zova_common_v1_common_proto_rawDescData
 }
 
-var file_zova_common_v1_common_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
+var file_zova_common_v1_common_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
+var file_zova_common_v1_common_proto_msgTypes = make([]protoimpl.MessageInfo, 5)
 var file_zova_common_v1_common_proto_goTypes = []any{
-	(*LatLng)(nil),       // 0: zova.common.v1.LatLng
-	(*Money)(nil),        // 1: zova.common.v1.Money
-	(*PageRequest)(nil),  // 2: zova.common.v1.PageRequest
-	(*PageResponse)(nil), // 3: zova.common.v1.PageResponse
+	(VehicleType)(0),              // 0: zova.common.v1.VehicleType
+	(*LatLng)(nil),                // 1: zova.common.v1.LatLng
+	(*Money)(nil),                 // 2: zova.common.v1.Money
+	(*PageRequest)(nil),           // 3: zova.common.v1.PageRequest
+	(*PageResponse)(nil),          // 4: zova.common.v1.PageResponse
+	(*EventMeta)(nil),             // 5: zova.common.v1.EventMeta
+	(*timestamppb.Timestamp)(nil), // 6: google.protobuf.Timestamp
 }
 var file_zova_common_v1_common_proto_depIdxs = []int32{
-	0, // [0:0] is the sub-list for method output_type
-	0, // [0:0] is the sub-list for method input_type
-	0, // [0:0] is the sub-list for extension type_name
-	0, // [0:0] is the sub-list for extension extendee
-	0, // [0:0] is the sub-list for field type_name
+	6, // 0: zova.common.v1.EventMeta.occurred_at:type_name -> google.protobuf.Timestamp
+	1, // [1:1] is the sub-list for method output_type
+	1, // [1:1] is the sub-list for method input_type
+	1, // [1:1] is the sub-list for extension type_name
+	1, // [1:1] is the sub-list for extension extendee
+	0, // [0:1] is the sub-list for field type_name
 }
 
 func init() { file_zova_common_v1_common_proto_init() }
@@ -288,13 +412,14 @@ func file_zova_common_v1_common_proto_init() {
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_zova_common_v1_common_proto_rawDesc), len(file_zova_common_v1_common_proto_rawDesc)),
-			NumEnums:      0,
-			NumMessages:   4,
+			NumEnums:      1,
+			NumMessages:   5,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
 		GoTypes:           file_zova_common_v1_common_proto_goTypes,
 		DependencyIndexes: file_zova_common_v1_common_proto_depIdxs,
+		EnumInfos:         file_zova_common_v1_common_proto_enumTypes,
 		MessageInfos:      file_zova_common_v1_common_proto_msgTypes,
 	}.Build()
 	File_zova_common_v1_common_proto = out.File
