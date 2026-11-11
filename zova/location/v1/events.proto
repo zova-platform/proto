@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package zova.location.v1;
+
+import "zova/common/v1/common.proto";
+
+message DriverMoved {
+  zova.common.v1.EventMeta meta = 1;
+  string driver_id = 2;
+  string job_id = 3;
+  zova.common.v1.LatLng position = 4;
+  double heading_deg = 5;
+}

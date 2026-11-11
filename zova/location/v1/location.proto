@@ -1,0 +1,72 @@
+syntax = "proto3";
+
+package zova.location.v1;
+
+import "google/protobuf/timestamp.proto";
+import "zova/common/v1/common.proto";
+
+enum DriverStatus {
+  DRIVER_STATUS_UNSPECIFIED = 0;
+  DRIVER_STATUS_OFFLINE = 1;
+  DRIVER_STATUS_ONLINE = 2;
+  DRIVER_STATUS_BUSY = 3;
+}
+
+message UpdateLocationRequest {
+  string driver_id = 1;
+  zova.common.v1.LatLng position = 2;
+  double heading_deg = 3;
+  double speed_mps = 4;
+  google.protobuf.Timestamp recorded_at = 5;
+}
+
+message UpdateLocationResponse {
+  int64 accepted_count = 1;
+}
+
+message SetDriverStatusRequest {
+  string driver_id = 1;
+  DriverStatus status = 2;
+  zova.common.v1.VehicleType vehicle_type = 3;
+  string active_job_id = 4;
+}
+
+message SetDriverStatusResponse {}
+
+message NearbyDriversRequest {
+  zova.common.v1.LatLng center = 1;
+  int32 radius_m = 2;
+  zova.common.v1.VehicleType vehicle_type = 3;
+  int32 limit = 4;
+}
+
+message NearbyDriver {
+  string driver_id = 1;
+  zova.common.v1.LatLng position = 2;
+  double distance_m = 3;
+}
+
+message NearbyDriversResponse {
+  repeated NearbyDriver drivers = 1;
+}
+
+message GetDriverLocationRequest {
+  string driver_id = 1;
+}
+
+message GetDriverLocationResponse {
+  string driver_id = 1;
+  zova.common.v1.LatLng position = 2;
+  double heading_deg = 3;
+  double speed_mps = 4;
+  DriverStatus status = 5;
+  string active_job_id = 6;
+  google.protobuf.Timestamp last_seen_at = 7;
+}
+
+service LocationService {
+  rpc UpdateLocation(stream UpdateLocationRequest) returns (UpdateLocationResponse);
+  rpc SetDriverStatus(SetDriverStatusRequest) returns (SetDriverStatusResponse);
+  rpc NearbyDrivers(NearbyDriversRequest) returns (NearbyDriversResponse);
+  rpc GetDriverLocation(GetDriverLocationRequest) returns (GetDriverLocationResponse);
+}

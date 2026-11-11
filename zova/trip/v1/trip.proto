@@ -1,0 +1,130 @@
+syntax = "proto3";
+
+package zova.trip.v1;
+
+import "google/protobuf/timestamp.proto";
+import "zova/common/v1/common.proto";
+
+enum TripStatus {
+  TRIP_STATUS_UNSPECIFIED = 0;
+  TRIP_STATUS_REQUESTED = 1;
+  TRIP_STATUS_DRIVER_ASSIGNED = 2;
+  TRIP_STATUS_DRIVER_ARRIVED = 3;
+  TRIP_STATUS_IN_PROGRESS = 4;
+  TRIP_STATUS_COMPLETED = 5;
+  TRIP_STATUS_CANCELLED = 6;
+  TRIP_STATUS_NO_DRIVER_FOUND = 7;
+}
+
+enum TripActor {
+  TRIP_ACTOR_UNSPECIFIED = 0;
+  TRIP_ACTOR_PASSENGER = 1;
+  TRIP_ACTOR_DRIVER = 2;
+  TRIP_ACTOR_SYSTEM = 3;
+}
+
+message Trip {
+  string id = 1;
+  string passenger_id = 2;
+  string driver_id = 3;
+  TripStatus status = 4;
+  zova.common.v1.VehicleType vehicle_type = 5;
+  zova.common.v1.LatLng pickup = 6;
+  zova.common.v1.LatLng dropoff = 7;
+  string quote_id = 8;
+  zova.common.v1.Money fare_estimate = 9;
+  zova.common.v1.Money fare_final = 10;
+  int64 distance_m = 11;
+  int64 duration_s = 12;
+  string cancel_reason = 13;
+  int64 version = 14;
+  google.protobuf.Timestamp requested_at = 15;
+  google.protobuf.Timestamp driver_assigned_at = 16;
+  google.protobuf.Timestamp driver_arrived_at = 17;
+  google.protobuf.Timestamp started_at = 18;
+  google.protobuf.Timestamp completed_at = 19;
+  google.protobuf.Timestamp cancelled_at = 20;
+}
+
+message RequestTripRequest {
+  string passenger_id = 1;
+  string quote_id = 2;
+  string idempotency_key = 3;
+}
+
+message RequestTripResponse {
+  Trip trip = 1;
+}
+
+message CancelTripRequest {
+  string trip_id = 1;
+  string actor_id = 2;
+  TripActor actor = 3;
+  string reason = 4;
+  string idempotency_key = 5;
+}
+
+message CancelTripResponse {
+  Trip trip = 1;
+}
+
+message MarkArrivedRequest {
+  string trip_id = 1;
+  string driver_id = 2;
+  string idempotency_key = 3;
+}
+
+message MarkArrivedResponse {
+  Trip trip = 1;
+}
+
+message StartTripRequest {
+  string trip_id = 1;
+  string driver_id = 2;
+  string idempotency_key = 3;
+}
+
+message StartTripResponse {
+  Trip trip = 1;
+}
+
+message CompleteTripRequest {
+  string trip_id = 1;
+  string driver_id = 2;
+  int64 distance_m = 3;
+  string idempotency_key = 4;
+}
+
+message CompleteTripResponse {
+  Trip trip = 1;
+}
+
+message GetTripRequest {
+  string trip_id = 1;
+  string requester_id = 2;
+}
+
+message GetTripResponse {
+  Trip trip = 1;
+}
+
+message ListTripsRequest {
+  string user_id = 1;
+  TripStatus status = 2;
+  zova.common.v1.PageRequest page = 3;
+}
+
+message ListTripsResponse {
+  repeated Trip trips = 1;
+  zova.common.v1.PageResponse page = 2;
+}
+
+service TripService {
+  rpc RequestTrip(RequestTripRequest) returns (RequestTripResponse);
+  rpc CancelTrip(CancelTripRequest) returns (CancelTripResponse);
+  rpc MarkArrived(MarkArrivedRequest) returns (MarkArrivedResponse);
+  rpc StartTrip(StartTripRequest) returns (StartTripResponse);
+  rpc CompleteTrip(CompleteTripRequest) returns (CompleteTripResponse);
+  rpc GetTrip(GetTripRequest) returns (GetTripResponse);
+  rpc ListTrips(ListTripsRequest) returns (ListTripsResponse);
+}

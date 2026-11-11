@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+package zova.auth.v1;
+
+import "zova/auth/v1/auth.proto";
+import "zova/common/v1/common.proto";
+
+message UserRegistered {
+  zova.common.v1.EventMeta meta = 1;
+  string user_id = 2;
+  UserRole role = 3;
+}

@@ -1,0 +1,118 @@
+syntax = "proto3";
+
+package zova.auth.v1;
+
+import "google/protobuf/timestamp.proto";
+import "zova/common/v1/common.proto";
+
+enum UserRole {
+  USER_ROLE_UNSPECIFIED = 0;
+  USER_ROLE_PASSENGER = 1;
+  USER_ROLE_DRIVER = 2;
+  USER_ROLE_ADMIN = 3;
+}
+
+message User {
+  string id = 1;
+  string phone = 2;
+  string email = 3;
+  string display_name = 4;
+  UserRole role = 5;
+  google.protobuf.Timestamp created_at = 6;
+}
+
+message Vehicle {
+  string id = 1;
+  string driver_id = 2;
+  string plate = 3;
+  zova.common.v1.VehicleType type = 4;
+  string model = 5;
+}
+
+message DriverProfile {
+  User user = 1;
+  string license_no = 2;
+  bool approved = 3;
+  repeated Vehicle vehicles = 4;
+}
+
+message TokenPair {
+  string access_token = 1;
+  google.protobuf.Timestamp access_expires_at = 2;
+  string refresh_token = 3;
+  google.protobuf.Timestamp refresh_expires_at = 4;
+}
+
+message RegisterRequest {
+  string phone = 1;
+  string email = 2;
+  string password = 3;
+  string display_name = 4;
+  UserRole role = 5;
+}
+
+message RegisterResponse {
+  User user = 1;
+}
+
+message LoginRequest {
+  string identifier = 1;
+  string password = 2;
+}
+
+message LoginResponse {
+  User user = 1;
+  TokenPair tokens = 2;
+}
+
+message RefreshRequest {
+  string refresh_token = 1;
+}
+
+message RefreshResponse {
+  TokenPair tokens = 1;
+}
+
+message LogoutRequest {
+  string refresh_token = 1;
+}
+
+message LogoutResponse {}
+
+message GetUserRequest {
+  string user_id = 1;
+}
+
+message GetUserResponse {
+  User user = 1;
+}
+
+message GetDriverProfileRequest {
+  string driver_id = 1;
+}
+
+message GetDriverProfileResponse {
+  DriverProfile profile = 1;
+}
+
+message UpsertVehicleRequest {
+  string driver_id = 1;
+  string vehicle_id = 2;
+  string plate = 3;
+  zova.common.v1.VehicleType type = 4;
+  string model = 5;
+}
+
+message UpsertVehicleResponse {
+  Vehicle vehicle = 1;
+}
+
+service AuthService {
+  rpc Register(RegisterRequest) returns (RegisterResponse);
+  rpc Login(LoginRequest) returns (LoginResponse);
+  rpc Refresh(RefreshRequest) returns (RefreshResponse);
+  rpc Logout(LogoutRequest) returns (LogoutResponse);
+  rpc GetUser(GetUserRequest) returns (GetUserResponse);
+  rpc GetDriverProfile(GetDriverProfileRequest) returns (GetDriverProfileResponse);
+  rpc UpsertVehicle(UpsertVehicleRequest) returns (UpsertVehicleResponse);
+}

@@ -1,0 +1,23 @@
+syntax = "proto3";
+
+package zova.trip.v1;
+
+import "zova/common/v1/common.proto";
+import "zova/trip/v1/trip.proto";
+
+message TripStatusChanged {
+  zova.common.v1.EventMeta meta = 1;
+  string trip_id = 2;
+  TripStatus from_status = 3;
+  TripStatus to_status = 4;
+  string driver_id = 5;
+  string passenger_id = 6;
+}
+
+message TripCompleted {
+  zova.common.v1.EventMeta meta = 1;
+  string trip_id = 2;
+  int64 distance_m = 3;
+  int64 duration_s = 4;
+  zova.common.v1.Money fare_final = 5;
+}

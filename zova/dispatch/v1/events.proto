@@ -1,0 +1,38 @@
+syntax = "proto3";
+
+package zova.dispatch.v1;
+
+import "google/protobuf/timestamp.proto";
+import "zova/common/v1/common.proto";
+import "zova/dispatch/v1/dispatch.proto";
+
+message JobRequested {
+  zova.common.v1.EventMeta meta = 1;
+  JobType job_type = 2;
+  string ref_id = 3;
+  zova.common.v1.LatLng pickup = 4;
+  zova.common.v1.LatLng dropoff = 5;
+  zova.common.v1.VehicleType vehicle_type = 6;
+}
+
+message JobOffered {
+  zova.common.v1.EventMeta meta = 1;
+  string job_id = 2;
+  string driver_id = 3;
+  zova.common.v1.LatLng pickup = 4;
+  google.protobuf.Timestamp expires_at = 5;
+}
+
+message JobAssigned {
+  zova.common.v1.EventMeta meta = 1;
+  string job_id = 2;
+  string ref_id = 3;
+  string driver_id = 4;
+}
+
+message JobUnfulfilled {
+  zova.common.v1.EventMeta meta = 1;
+  string job_id = 2;
+  string ref_id = 3;
+  string reason = 4;
+}

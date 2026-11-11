@@ -1,0 +1,52 @@
+syntax = "proto3";
+
+package zova.pricing.v1;
+
+import "google/protobuf/timestamp.proto";
+import "zova/common/v1/common.proto";
+
+message Quote {
+  string quote_id = 1;
+  zova.common.v1.VehicleType vehicle_type = 2;
+  zova.common.v1.LatLng pickup = 3;
+  zova.common.v1.LatLng dropoff = 4;
+  zova.common.v1.Money fare = 5;
+  int64 distance_m = 6;
+  int64 duration_s = 7;
+  string route_polyline = 8;
+  google.protobuf.Timestamp expires_at = 9;
+}
+
+message CreateQuoteRequest {
+  zova.common.v1.LatLng pickup = 1;
+  zova.common.v1.LatLng dropoff = 2;
+  zova.common.v1.VehicleType vehicle_type = 3;
+}
+
+message CreateQuoteResponse {
+  Quote quote = 1;
+}
+
+message GetQuoteRequest {
+  string quote_id = 1;
+}
+
+message GetQuoteResponse {
+  Quote quote = 1;
+}
+
+message CalculateFinalFareRequest {
+  zova.common.v1.VehicleType vehicle_type = 1;
+  int64 distance_m = 2;
+  int64 duration_s = 3;
+}
+
+message CalculateFinalFareResponse {
+  zova.common.v1.Money fare = 1;
+}
+
+service PricingService {
+  rpc CreateQuote(CreateQuoteRequest) returns (CreateQuoteResponse);
+  rpc GetQuote(GetQuoteRequest) returns (GetQuoteResponse);
+  rpc CalculateFinalFare(CalculateFinalFareRequest) returns (CalculateFinalFareResponse);
+}
