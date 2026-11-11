@@ -1,0 +1,73 @@
+syntax = "proto3";
+
+package zova.dispatch.v1;
+
+import "google/protobuf/timestamp.proto";
+import "zova/common/v1/common.proto";
+
+enum JobType {
+  JOB_TYPE_UNSPECIFIED = 0;
+  JOB_TYPE_RIDE = 1;
+  JOB_TYPE_DELIVERY = 2;
+  JOB_TYPE_PARCEL = 3;
+}
+
+enum JobStatus {
+  JOB_STATUS_UNSPECIFIED = 0;
+  JOB_STATUS_SEARCHING = 1;
+  JOB_STATUS_ASSIGNED = 2;
+  JOB_STATUS_UNFULFILLED = 3;
+  JOB_STATUS_CANCELLED = 4;
+}
+
+enum RespondOfferResult {
+  RESPOND_OFFER_RESULT_UNSPECIFIED = 0;
+  RESPOND_OFFER_RESULT_ACCEPTED = 1;
+  RESPOND_OFFER_RESULT_REJECTED = 2;
+  RESPOND_OFFER_RESULT_EXPIRED = 3;
+}
+
+message Job {
+  string id = 1;
+  JobType job_type = 2;
+  string ref_id = 3;
+  JobStatus status = 4;
+  zova.common.v1.LatLng pickup = 5;
+  zova.common.v1.LatLng dropoff = 6;
+  zova.common.v1.VehicleType vehicle_type = 7;
+  string driver_id = 8;
+  int32 attempts = 9;
+  google.protobuf.Timestamp created_at = 10;
+}
+
+message RespondOfferRequest {
+  string job_id = 1;
+  string driver_id = 2;
+  bool accept = 3;
+}
+
+message RespondOfferResponse {
+  RespondOfferResult result = 1;
+}
+
+message CancelJobRequest {
+  string job_id = 1;
+}
+
+message CancelJobResponse {
+  Job job = 1;
+}
+
+message GetJobRequest {
+  string job_id = 1;
+}
+
+message GetJobResponse {
+  Job job = 1;
+}
+
+service DispatchService {
+  rpc RespondOffer(RespondOfferRequest) returns (RespondOfferResponse);
+  rpc CancelJob(CancelJobRequest) returns (CancelJobResponse);
+  rpc GetJob(GetJobRequest) returns (GetJobResponse);
+}
